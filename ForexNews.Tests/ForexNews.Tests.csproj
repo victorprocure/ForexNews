@@ -39,6 +39,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Extensions" />
@@ -48,13 +49,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="ExternalHTMLTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ForexNews\ForexNews.csproj">
-      <Project>{0B359F05-FCEA-4874-B27E-DC17EC616F70}</Project>
-      <Name>ForexNews</Name>
+    <ProjectReference Include="..\ForexNews.API\ForexNews.API.csproj">
+      <Project>{1615af92-008a-4b9c-be29-755a54057abb}</Project>
+      <Name>ForexNews.API</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
