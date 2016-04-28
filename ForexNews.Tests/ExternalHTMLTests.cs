@@ -62,7 +62,11 @@ namespace ForexNews.Tests
         {
             var xml = "http://www.forexfactory.com/ffcal_week_this.xml";
 
-            Assert.IsTrue(false);
+            var calendarReader = new CalendarReader(xml);
+
+            var calendar = new Calendar(calendarReader);
+
+            Assert.IsTrue(calendar.Events.Count > 0);
         }
     }
 }
