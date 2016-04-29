@@ -1,0 +1,1 @@
+﻿﻿<%@ Application CodeBehind="Global.asax.cs" Inherits="ForexNews.API.WebApiApplication" Language="C#" %>

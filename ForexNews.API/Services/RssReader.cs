@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
+using ForexNews.API.Extensions;
 
 namespace ForexNews.API.Services
 {
@@ -23,6 +24,38 @@ namespace ForexNews.API.Services
             }
 
             this.LoadItems(url);
+        }
+
+        public RssReader(string[] urls)
+        {
+            if (urls == null || urls?.Count() == 0)
+            {
+                throw new ArgumentNullException(nameof(urls));
+            }
+
+            var canConnect = (from c in urls
+                              select new Crawler(c).Connected).All(con => con == true);
+
+            if (!canConnect)
+            {
+                throw new HttpException("Unable to connect to one or more of supplied URLs");
+            }
+
+            this.LoadItems(urls);
+        }
+
+        private void LoadItems(string[] urls)
+        {
+            if (urls == null || urls?.Count() == 0)
+            {
+                throw new ArgumentNullException(nameof(urls));
+            }
+
+            this.Items = (from url in urls
+                          from xmlReader in XmlReader.Create(url).Use()
+                          let feed = SyndicationFeed.Load(xmlReader)
+                          from item in feed.Items
+                          select item).Distinct().ToList();
         }
 
         private void LoadItems(string url)

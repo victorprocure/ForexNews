@@ -31,7 +31,7 @@ namespace ForexNews.API.Services
 
         public bool TestConnection(string url)
         {
-            Ping pinger = new Ping();
+            var pinger = new Ping();
 
             var uri = new UriBuilder(url).Uri;
             IPAddress host;

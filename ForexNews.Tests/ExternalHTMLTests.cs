@@ -1,4 +1,5 @@
 ﻿using System;
+using ForexNews.API.Model;
 using ForexNews.API.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -67,6 +68,23 @@ namespace ForexNews.Tests
             var calendar = new Calendar(calendarReader);
 
             Assert.IsTrue(calendar.Events.Count > 0);
+        }
+
+        [TestMethod]
+        public void RssServiceCanReadMultipleFeeds()
+        {
+            var rsss = new[] {
+                "http://rss.forexfactory.net/news/breakingnews.xml",
+                "http://rss.forexfactory.net/news/fundamentalanalysis.xml",
+                "http://rss.forexfactory.net/news/technicalanalysis.xml",
+                "http://rss.forexfactory.net/news/entertainmentnews.xml",
+                "http://rss.forexfactory.net/news/forexindustrynews.xml",
+                "http://rss.forexfactory.net/news/educationalnews.xml"
+            };
+
+            var rssReader = new RssReader(rsss);
+
+            Assert.IsTrue(rssReader.Items.Count > 0);
         }
     }
 }

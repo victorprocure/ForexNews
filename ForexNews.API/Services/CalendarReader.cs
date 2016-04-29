@@ -17,7 +17,19 @@ namespace ForexNews.API.Services
 
         public CalendarReaderDescendant ParentEventDescendant { get; set; }
 
-        public List<CalendarReaderDescendant> ChildDescendants { get; set; }
+        //child descendants
+        public CalendarReaderDescendant TitleDescendant { get; set; }
+
+        public CalendarReaderDescendant CountryDescendant { get; set; }
+        public CalendarReaderDescendant DateDescendant { get; set; }
+
+        public CalendarReaderDescendant TimeDescendant { get; set; }
+
+        public CalendarReaderDescendant ImpactDescendant { get; set; }
+
+        public CalendarReaderDescendant ForecastDescendant { get; set; }
+
+        public CalendarReaderDescendant PreviousDescendant { get; set; }
 
         private IEnumerable<XElement> calendarDocument;
 
@@ -69,15 +81,13 @@ namespace ForexNews.API.Services
             var previousDescendant = new CalendarReaderDescendant();
             previousDescendant.DescendantName = "previous";
 
-            this.ChildDescendants = new List<CalendarReaderDescendant>();
-
-            this.ChildDescendants.Add(titleDescendant);
-            this.ChildDescendants.Add(countryDescendant);
-            this.ChildDescendants.Add(dateDescendant);
-            this.ChildDescendants.Add(timeDescendant);
-            this.ChildDescendants.Add(impactDescendant);
-            this.ChildDescendants.Add(forecastDescendant);
-            this.ChildDescendants.Add(previousDescendant);
+            this.TitleDescendant = titleDescendant;
+            this.CountryDescendant = countryDescendant;
+            this.DateDescendant = dateDescendant;
+            this.TimeDescendant = timeDescendant;
+            this.ImpactDescendant = impactDescendant;
+            this.ForecastDescendant = forecastDescendant;
+            this.PreviousDescendant = previousDescendant;
         }
 
         public void LoadCalendar()
@@ -87,7 +97,7 @@ namespace ForexNews.API.Services
                 throw new ArgumentNullException(nameof(this.url));
             }
 
-            this.calendarDocument = XDocument.Load(this.url).Root.Elements(this.CalendarRootName);
+            this.calendarDocument = XDocument.Load(this.url).Root.Elements(this.ParentEventDescendant.DescendantName);
         }
 
         public IEnumerable<CalendarEvent> ReadEvents()
@@ -97,11 +107,18 @@ namespace ForexNews.API.Services
                 throw new ArgumentNullException(nameof(this.calendarDocument));
             }
 
-            from e in this.calendarDocument
-            select new CalendarEvent
-            {
-                Title = (string)e.Element(this.ChildDescendants[0])
-            }
+            var culture = new System.Globalization.CultureInfo("en-US", true);
+
+            return from e in this.calendarDocument
+                   select new CalendarEvent
+                   {
+                       Title = (string)e.Element(this.TitleDescendant.DescendantName),
+                       Country = (string)e.Element(this.CountryDescendant.DescendantName),
+                       Date = Convert.ToDateTime((string)e.Element(this.DateDescendant.DescendantName) + " " + (string)e.Element(this.TimeDescendant.DescendantName), culture),
+                       Impact = (string)e.Element(this.ImpactDescendant.DescendantName),
+                       Forecast = (string)e.Element(this.ForecastDescendant.DescendantName),
+                       Previous = (string)e.Element(this.PreviousDescendant.DescendantName)
+                   };
         }
     }
 }
